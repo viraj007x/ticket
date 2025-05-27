@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BusTicketing - Book Your Journey</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-poppins">
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">BusTicketing</h1>
+      <div class="space-x-4">
+        <button id="homeBtn" class="bg-blue-700 px-4 py-2 rounded hover:bg-blue-700">Home</button>
+        <button id="bookingsBtn" class="hover:bg-blue-700 px-4 py-2 rounded">My Bookings</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mx-auto p-4">
+    <!-- Home Section -->
+    <section id="homeSection" class="bg-white rounded-lg shadow-md p-8 mb-4">
+      <h2 class="text-2xl font-semibold text-center text-blue-600 mb-4">Book Your Bus Ticket</h2>
+      <form id="bookingForm" class="space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Passenger Name</label>
+          <input type="text" id="name" name="name" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          <p id="nameError" class="text-red-500 text-sm hidden">Please enter a valid name.</p>
+        </div>
+        <div>
+          <label for="route" class="block text-sm font-medium text-gray-700">Select Route</label>
+          <select id="route" name="route" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="" disabled selected>Select Route</option>
+            <option value="New York to Boston">New York to Boston ($30)</option>
+            <option value="Los Angeles to San Francisco">Los Angeles to San Francisco ($45)</option>
+            <option value="Chicago to Detroit">Chicago to Detroit ($25)</option>
+            <option value="Miami to Orlando">Miami to Orlando ($20)</option>
+          </select>
+          <p id="routeError" class="text-red-500 text-sm hidden">Please select a route.</p>
+        </div>
+        <div>
+          <label for="date" class="block text-sm font-medium text-gray-700">Travel Date</label>
+          <input type="date" id="date" name="date" min="2025-05-28" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          <p id="dateError" class="text-red-500 text-sm hidden">Please select a valid future date.</p>
+        </div>
+        <div>
+          <label for="seat" class="block text-sm font-medium text-gray-700">Seat Number</label>
+          <select id="seat" name="seat" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="" disabled selected>Select Seat</option>
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+          </select>
+          <p id="seatError" class="text-red-500 text-sm hidden">Please select a seat.</p>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Proceed to Payment</button>
+      </form>
+    </section>
+
+    <!-- My Bookings Section -->
+    <section id="bookingsSection" class="hidden bg-white rounded-lg shadow-md p-8">
+      <h2 class="text-2xl font-semibold text-center text-blue-600 mb-4">My Bookings</h2>
+      <div id="bookingsList" class="space-y-4">
+        <!-- Bookings will be dynamically added here -->
+      </div>
+    </section>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+      <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
+        <h2 class="text-xl font-semibold mb-4 text-center text-blue-600">Payment Details</h2>
+        <p class="mb-4">Booking for <span id="paymentRoute"></span>. Amount: <span id="paymentAmount"></span></p>
+        <form id="paymentForm" class="space-y-4">
+          <div>
+            <label for="cardNumber" class="block text-sm font-medium text-gray-700">Card Number</label>
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <p id="cardNumberError" class="text-red-500 text-sm hidden">Please enter a valid 16-digit card number.</p>
+          </div>
+          <div>
+            <label for="cardholderName" class="block text-sm font-medium text-gray-700">Cardholder Name</label>
+            <input type="text" id="cardholderName" placeholder="John Doe" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <p id="cardholderNameError" class="text-red-500 text-sm hidden">Please enter the cardholder's name.</p>
+          </div>
+          <div class="flex space-x-4">
+            <div class="w-1/2">
+              <label for="expiryDate" class="block text-sm font-medium text-gray-700">Expiration Date</label>
+              <input type="text" id="expiryDate" placeholder="MM/YY" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+              <p id="expiryDateError" class="text-red-500 text-sm hidden">Please enter a valid MM/YY date.</p>
+            </div>
+            <div class="w-1/2">
+              <label for="cvv" class="block text-sm font-medium text-gray-700">CVV</label>
+              <input type="text" id="cvv" placeholder="123" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+              <p id="cvvError" class="text-red-500 text-sm hidden">Please enter a valid 3-digit CVV.</p>
+            </div>
+          </div>
+          <div>
+            <label for="billingAddress" class="block text-sm font-medium text-gray-700">Billing Address</label>
+            <textarea id="billingAddress" placeholder="123 Main St, City, State, ZIP" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+            <p id="billingAddressError" class="text-red-500 text-sm hidden">Please enter a valid billing address.</p>
+          </div>
+          <button type="submit" id="confirmPayment" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Confirm Payment</button>
+          <button type="button" id="cancelPayment" class="w-full bg-gray-300 text-gray-700 p-2 rounded mt-2 hover:bg-gray-400">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Navigation
+    const homeBtn = document.getElementById('homeBtn');
+    const bookingsBtn = document.getElementById('bookingsBtn');
+    const homeSection = document.getElementById('homeSection');
+    const bookingsSection = document.getElementById('bookingsSection');
+
+    homeBtn.addEventListener('click', () => {
+      homeSection.classList.remove('hidden');
+      bookingsSection.classList.add('hidden');
+      homeBtn.classList.add('bg-blue-700');
+      bookingsBtn.classList.remove('bg-blue-700');
+    });
+
+    bookingsBtn.addEventListener('click', () => {
+      bookingsSection.classList.remove('hidden');
+      homeSection.classList.add('hidden');
+      bookingsBtn.classList.add('bg-blue-700');
+      homeBtn.classList.remove('bg-blue-700');
+      displayBookings();
+    });
+
+    // Booking Form
+    const bookingForm = document.getElementById('bookingForm');
+    const paymentModal = document.getElementById('paymentModal');
+    const paymentForm = document.getElementById('paymentForm');
+    const cancelPayment = document.getElementById('cancelPayment');
+    const paymentRoute = document.getElementById('paymentRoute');
+    const paymentAmount = document.getElementById('paymentAmount');
+
+    let currentBooking = {};
+
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const route = document.getElementById('route').value;
+      const date = document.getElementById('date').value;
+      const seat = document.getElementById('seat').value;
+
+      // Reset error messages
+      document.getElementById('nameError').classList.add('hidden');
+      document.getElementById('routeError').classList.add('hidden');
+      document.getElementById('dateError').classList.add('hidden');
+      document.getElementById('seatError').classList.add('hidden');
+
+      // Client-side validation
+      let isValid = true;
+      if (!name) {
+        document.getElementById('nameError').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!route) {
+        document.getElementById('routeError').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!date || new Date(date) < new Date()) {
+        document.getElementById('dateError').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!seat) {
+        document.getElementById('seatError').classList.remove('hidden');
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      const price = route.includes('New York') ? '$30' : route.includes('Los Angeles') ? '$45' : route.includes('Chicago') ? '$25' : '$20';
+      currentBooking = { name, route, date, seat };
+      paymentRoute.textContent = route;
+      paymentAmount.textContent = price;
+      paymentModal.classList.remove('hidden');
+    });
+
+    paymentForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const cardNumber = document.getElementById('cardNumber').value.trim();
+      const cardholderName = document.getElementById('cardholderName').value.trim();
+      const expiryDate = document.getElementById('expiryDate').value.trim();
+      const cvv = document.getElementById('cvv').value.trim();
+      const billingAddress = document.getElementById('billingAddress').value.trim();
+
+      // Reset error messages
+      document.getElementById('cardNumberError').classList.add('hidden');
+      document.getElementById('cardholderNameError').classList.add('hidden');
+      document.getElementById('expiryDateError').classList.add('hidden');
+      document.getElementById('cvvError').classList.add('hidden');
+      document.getElementById('billingAddressError').classList.add('hidden');
+
+      // Client-side validation
+      let isValid = true;
+      if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ''))) {
+        document.getElementById('cardNumberError').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!cardholderName) {
+        document.getElementById('cardholderNameError').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+        document.getElementById('expiryDateError').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!/^\d{3}$/.test(cvv)) {
+        document.getElementById('cvvError').classList.remove('hidden');
+        isValid = false;
+      }
+      if (!billingAddress) {
+        document.getElementById('billingAddressError').classList.remove('hidden');
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...currentBooking,
+            cardNumber,
+            cardholderName,
+            expiryDate,
+            cvv,
+            billingAddress
+          })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          paymentModal.classList.add('hidden');
+          bookingForm.reset();
+          paymentForm.reset();
+          alert('Booking confirmed! Ticket ID: ' + data.ticketId);
+        } else {
+          alert('Payment failed: ' + data.error);
+        }
+      } catch (error) {
+        console.error('Error processing payment:', error);
+        alert('An error occurred while processing the payment.');
+      }
+    });
+
+    cancelPayment.addEventListener('click', () => {
+      paymentModal.classList.add('hidden');
+      bookingForm.reset();
+      paymentForm.reset();
+    });
+
+    async function displayBookings() {
+      const bookingsList = document.getElementById('bookingsList');
+      bookingsList.innerHTML = '';
+      try {
+        const response = await fetch('http://localhost:3000/api/bookings');
+        const bookings = await response.json();
+        if (bookings.length === 0) {
+          bookingsList.innerHTML = '<p class="text-gray-700">No bookings found.</p>';
+          return;
+        }
+        bookings.forEach(booking => {
+          const bookingDiv = document.createElement('div');
+          bookingDiv.className = 'border p-4 rounded bg-gray-50';
+          bookingDiv.innerHTML = `
+            <p><strong>Ticket ID:</strong> ${booking.ticketId}</p>
+            <p><strong>Name:</strong> ${booking.name}</p>
+            <p><strong>Route:</strong> ${booking.route}</p>
+            <p><strong>Date:</strong> ${booking.date}</p>
+            <p><strong>Seat:</strong> ${booking.seat}</p>
+          `;
+          bookingsList.appendChild(bookingDiv);
+        });
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+        bookingsList.innerHTML = '<p class="text-gray-700">Error fetching bookings.</p>';
+      }
+    }
+  </script>
+</body>
+</html>
